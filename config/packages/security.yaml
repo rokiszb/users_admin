@@ -2,6 +2,8 @@ security:
     encoders:
         App\Security\AdminUser: bcrypt
         Symfony\Component\Security\Core\User\User: bcrypt
+        App\Entity\User:
+            algorithm: 'bcrypt'
 #            algorithm: auto
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:

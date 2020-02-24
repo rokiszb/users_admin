@@ -3,15 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
+    private $roles;
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
+        $this->setSalt('druska');
     }
 
     /**
@@ -20,6 +25,10 @@ class User
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    private $salt;
+
+    private $plainPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -35,6 +44,18 @@ class User
      * @ORM\Column(type="datetime")
      */
     private $created_at;
+
+    public function getSalt(): ?string
+    {
+        return $this->salt;
+    }
+
+    public function setSalt($salt): self
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -58,9 +79,21 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
@@ -75,5 +108,29 @@ class User
         $this->created_at = $created_at;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+        $this->password = '';
     }
 }

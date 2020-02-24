@@ -2,5 +2,10 @@ easy_admin:
     entities:
         User:
             class: App\Entity\User
-#            export_path: '%kernel.project_dir/var/export/user'
+            controller: App\Controller\AdminController
+#            export_path: '%kernel.project_dir/var/export/user'list:
+            form:
+                fields:
+                    - 'name'
+                    - { property: 'password', type: 'password' }
             password_encoding: { algorithm: 'bcrypt', cost: 12 }
